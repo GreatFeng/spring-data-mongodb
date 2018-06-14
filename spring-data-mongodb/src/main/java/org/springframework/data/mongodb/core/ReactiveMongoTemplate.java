@@ -31,8 +31,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -119,7 +117,6 @@ import com.mongodb.ClientSessionOptions;
 import com.mongodb.CursorType;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import com.mongodb.DBRef;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
@@ -165,7 +162,7 @@ import com.mongodb.util.JSONParseException;
  */
 public class ReactiveMongoTemplate implements ReactiveMongoOperations, ApplicationContextAware {
 
-	public static final DbRefResolver NO_OP_REF_RESOLVER = new NoOpDbRefResolver();
+	public static final DbRefResolver NO_OP_REF_RESOLVER = NoOpDbRefResolver.INSTANCE;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReactiveMongoTemplate.class);
 	private static final String ID_FIELD = "_id";
@@ -3172,54 +3169,6 @@ public class ReactiveMongoTemplate implements ReactiveMongoOperations, Applicati
 
 	private static List<? extends Document> toDocuments(final Collection<? extends Document> documents) {
 		return new ArrayList<>(documents);
-	}
-
-	/**
-	 * No-Operation {@link org.springframework.data.mongodb.core.mapping.DBRef} resolver.
-	 *
-	 * @author Mark Paluch
-	 */
-	static class NoOpDbRefResolver implements DbRefResolver {
-
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.mongodb.core.convert.DbRefResolver#resolveDbRef(org.springframework.data.mongodb.core.mapping.MongoPersistentProperty, org.springframework.data.mongodb.core.convert.DbRefResolverCallback)
-		 */
-		@Override
-		@Nullable
-		public Object resolveDbRef(@Nonnull MongoPersistentProperty property, @Nonnull DBRef dbref,
-				@Nonnull DbRefResolverCallback callback, @Nonnull DbRefProxyHandler proxyHandler) {
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.mongodb.core.convert.DbRefResolver#created(org.springframework.data.mongodb.core.mapping.MongoPersistentProperty, org.springframework.data.mongodb.core.mapping.MongoPersistentEntity, java.lang.Object)
-		 */
-		@Override
-		@Nullable
-		public DBRef createDbRef(org.springframework.data.mongodb.core.mapping.DBRef annotation,
-				MongoPersistentEntity<?> entity, Object id) {
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.mongodb.core.convert.DbRefResolver#fetch(com.mongodb.DBRef)
-		 */
-		@Override
-		public Document fetch(DBRef dbRef) {
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.mongodb.core.convert.DbRefResolver#bulkFetch(java.util.List)
-		 */
-		@Override
-		public List<Document> bulkFetch(List<DBRef> dbRefs) {
-			return Collections.emptyList();
-		}
 	}
 
 	/**

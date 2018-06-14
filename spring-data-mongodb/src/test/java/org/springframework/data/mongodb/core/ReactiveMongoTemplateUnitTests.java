@@ -23,6 +23,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 import com.mongodb.client.model.ReplaceOptions;
 import lombok.Data;
+import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -43,7 +44,6 @@ import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.MongoTemplateUnitTests.AutogenerateableId;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate.NoOpDbRefResolver;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -101,7 +101,7 @@ public class ReactiveMongoTemplateUnitTests {
 		when(findPublisher.first()).thenReturn(findPublisher);
 
 		this.mappingContext = new MongoMappingContext();
-		this.converter = new MappingMongoConverter(new NoOpDbRefResolver(), mappingContext);
+		this.converter = new MappingMongoConverter(NoOpDbRefResolver.INSTANCE, mappingContext);
 		this.template = new ReactiveMongoTemplate(factory, converter);
 
 	}
